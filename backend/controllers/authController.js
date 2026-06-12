@@ -1,0 +1,76 @@
+import bcrypt from 'bcryptjs';
+import User from '../models/user.js';
+
+/******************************************************* REGISTRATION *********************************************************/
+
+export const register = async (req, res) => {
+    try {
+        const {username, password} = req.body;
+
+        const existingUser = await User.findOne({where: {username}});
+        if (existingUser) {
+            return res.status(400).json({error: "Username already been taken."});
+        }
+
+        const salt = await bcrypt.genSalt(10); // The salt string is concatenated to the password to grant that two identical passwords have different hash codes
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await User.create({
+            username: username,
+            password: hashedPassword
+        });
+
+        res.status(201).json({ 
+            message: "Registration completed with success.",
+            user: { id: newUser.id, username: newUser.username }
+        });
+
+    } catch(error) {
+        console.error("Error during registration:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+/********************************************************** LOGIN ************************************************************/
+
+export const login = async (req, res) => {
+    try {
+        const {username, password} = req.body;
+
+        const user = await User.findOne({where: {username}});
+        if (!user) {
+            return res.status(401).json({error: "Credentials are not valid."});
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({error: "Credentials are not valid."});
+        }
+
+        req.session.isAuthenticated = true;
+        req.session.userId = user.id;
+        req.session.username = user.username;
+
+        res.status(200).json({ 
+            message: "Login completed with success.",
+            user: {id: user.id, username: user.username}
+        });
+
+    } catch(error) {
+        console.error("Error during login:", error);
+        res.status(500).json({error: "Internal server error."});
+    }
+};
+
+/********************************************************* LOGOUT ************************************************************/
+
+
+export const logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({error: "Error during logout."});
+        }
+        res.clearCookie('connect.sid');
+        res.status(200).json({message: "Logout completed with success."});
+    });
+};
