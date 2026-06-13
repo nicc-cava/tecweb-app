@@ -21,7 +21,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (!this.credentials.username || !this.credentials.password) {
-      this.errorMessage = 'Inserisci username e password.';
+      this.errorMessage = 'Please enter username and password.';
       return;
     }
 
@@ -34,7 +34,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Errore durante l\'accesso. Controlla le credenziali.';
+        this.errorMessage = err.error?.error || 'Error during login. Check your credentials.';
 
         this.cdr.detectChanges(); // Forces Angular to update the HTML
       }

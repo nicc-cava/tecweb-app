@@ -1,1 +1,101 @@
-<p>challenge-create works!</p>
+<div class="max-w-4xl mx-auto mt-8 bg-slate-900 p-8 rounded-xl shadow-2xl border border-slate-800">
+  
+  <div class="mb-8 border-b border-slate-800 pb-4">
+    <h1 class="text-3xl font-bold text-white">Create a New <span class="text-emerald-500">Challenge</span></h1>
+    <p class="text-slate-400 mt-2">Design a regex puzzle. Provide the secret regex, two public examples, and the hidden test strings.</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6 text-sm font-medium">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form (ngSubmit)="onSubmit()" #createForm="ngForm" class="space-y-6">
+    
+    <div>
+      <label for="regex" class="block text-sm font-bold text-emerald-400 mb-2">Secret Regular Expression</label>
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-mono">/</span>
+        <input 
+          type="text" 
+          id="regex" 
+          name="regex" 
+          [(ngModel)]="regex" 
+          required
+          class="w-full bg-slate-950 font-mono border border-slate-700 rounded-lg pl-8 pr-8 py-3 text-emerald-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+          placeholder="^([a-z]+[0-9]+)$"
+        >
+        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 font-mono">/</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-950/50 p-4 rounded-lg border border-slate-800">
+      <div>
+        <label for="positiveExample" class="block text-sm font-medium text-emerald-400 mb-2">Public Positive Example</label>
+        <input 
+          type="text" 
+          id="positiveExample" 
+          name="positiveExample" 
+          [(ngModel)]="positiveExample" 
+          required
+          class="w-full bg-slate-950 font-mono text-sm border border-slate-700 rounded-lg px-4 py-2 text-slate-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+          placeholder="A string that matches"
+        >
+      </div>
+      <div>
+        <label for="negativeExample" class="block text-sm font-medium text-red-400 mb-2">Public Negative Example</label>
+        <input 
+          type="text" 
+          id="negativeExample" 
+          name="negativeExample" 
+          [(ngModel)]="negativeExample" 
+          required
+          class="w-full bg-slate-950 font-mono text-sm border border-slate-700 rounded-lg px-4 py-2 text-slate-300 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+          placeholder="A string that DOES NOT match"
+        >
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div>
+        <label for="positive" class="block text-sm font-medium text-emerald-400 mb-2">Hidden Positive Strings</label>
+        <p class="text-xs text-slate-500 mb-2">Enter up to 10 strings that <b class="text-white">MUST</b> match (one per line).</p>
+        <textarea 
+          id="positive" 
+          name="positive" 
+          [(ngModel)]="positiveStringsText" 
+          required
+          rows="8"
+          class="w-full bg-slate-950 font-mono text-sm border border-slate-700 rounded-lg px-4 py-3 text-slate-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
+        ></textarea>
+      </div>
+
+      <div>
+        <label for="negative" class="block text-sm font-medium text-red-400 mb-2">Hidden Negative Strings</label>
+        <p class="text-xs text-slate-500 mb-2">Enter up to 10 strings that <b class="text-white">MUST NOT</b> match (one per line).</p>
+        <textarea 
+          id="negative" 
+          name="negative" 
+          [(ngModel)]="negativeStringsText" 
+          required
+          rows="8"
+          class="w-full bg-slate-950 font-mono text-sm border border-slate-700 rounded-lg px-4 py-3 text-slate-300 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 resize-none"
+        ></textarea>
+      </div>
+
+    </div>
+
+    <div class="pt-4 border-t border-slate-800">
+      <button 
+        type="submit" 
+        [disabled]="isLoading || createForm.invalid"
+        class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ isLoading ? 'Publishing...' : 'Submit Challenge' }}
+      </button>
+    </div>
+
+  </form>
+</div>

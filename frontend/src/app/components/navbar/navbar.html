@@ -6,19 +6,19 @@
     </a>
 
     <div class="flex items-center space-x-6 font-medium">
-      <a routerLink="/home" class="hover:text-emerald-400 transition duration-300">Sfide</a>
-      <a routerLink="/rules" class="hover:text-emerald-400 transition duration-300">Regole</a>
+      <a routerLink="/home" class="hover:text-emerald-400 transition duration-300">Challenges</a>
+      <a routerLink="/rules" class="hover:text-emerald-400 transition duration-300">Rules</a>
 
       @if (isLoggedIn) {
-        <a routerLink="/create" class="hover:text-emerald-400 transition duration-300">Crea Sfida</a>
+        <a routerLink="/create" class="hover:text-emerald-400 transition duration-300">Create Challenge</a>
         <button (click)="onLogout()" class="text-red-400 hover:text-white hover:bg-red-500/20 px-4 py-2 border border-red-500/30 rounded-lg transition duration-300">
-          Esci
+          Logout
         </button>
       } 
       @else {
-        <a routerLink="/login" class="hover:text-white transition duration-300">Accedi</a>
+        <a routerLink="/login" class="hover:text-white transition duration-300">Login</a>
         <a routerLink="/register" class="bg-emerald-500 text-slate-950 hover:bg-emerald-400 px-5 py-2 rounded-lg font-semibold shadow-md transition duration-300">
-          Registrati
+          Register
         </a>
       }
     </div>

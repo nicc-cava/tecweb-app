@@ -1,9 +1,71 @@
-import { Component } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { ChallengeService } from '../../services/challenge.service';
 
 @Component({
   selector: 'app-challenge-create',
-  imports: [],
-  templateUrl: './challenge-create.html',
-  styleUrl: './challenge-create.scss',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './challenge-create.html'
 })
-export class ChallengeCreate {}
+export class ChallengeCreateComponent {
+  regex: string = '';
+  positiveExample: string = ''; // New!
+  negativeExample: string = ''; // New!
+  positiveStringsText: string = '';
+  negativeStringsText: string = '';
+  isLoading: boolean = false;
+  errorMessage: string = '';
+
+  private challengeService = inject(ChallengeService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
+  onSubmit() {
+    this.errorMessage = '';
+
+    if (!this.regex || !this.positiveExample || !this.negativeExample) {
+      this.errorMessage = 'Please provide the regex and both visible examples.';
+      return;
+    }
+
+    const positiveTestStrings = this.positiveStringsText
+      .split('\n')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    const negativeTestStrings = this.negativeStringsText
+      .split('\n')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    if (positiveTestStrings.length === 0 || positiveTestStrings.length > 10 || 
+        negativeTestStrings.length === 0 || negativeTestStrings.length > 10) {
+      this.errorMessage = `You must provide between 1 and 10 hidden test strings for each category.`;
+      return;
+    }
+
+    this.isLoading = true;
+
+    const payload = {
+      regex: this.regex,
+      positiveExample: this.positiveExample,
+      negativeExample: this.negativeExample,
+      positiveTestStrings: positiveTestStrings,
+      negativeTestStrings: negativeTestStrings
+    };
+
+    this.challengeService.createChallenge(payload).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Error creating the challenge. Please check your inputs.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+}

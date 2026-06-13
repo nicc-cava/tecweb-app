@@ -1,1 +1,58 @@
-<p>home works!</p>
+<div class="max-w-6xl mx-auto mt-8">
+  
+  <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+    <h1 class="text-4xl font-bold text-white">Available <span class="text-emerald-500">Challenges</span></h1>
+    <p class="text-slate-400">Select a riddle to test your regex skills.</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6 text-center">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center py-20 text-slate-400">
+      <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="text-lg">Loading challenges...</span>
+    </div>
+  }
+
+  @if (!isLoading && challenges.length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      @for (challenge of challenges; track challenge.id) {
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg hover:border-emerald-500/50 transition duration-300 flex flex-col">
+          
+          <div class="flex-grow">
+            <h3 class="text-xl font-bold text-slate-200 mb-2">Challenge #{{ challenge.id }}</h3>
+            <p class="text-sm text-slate-500 mb-4">
+              Created by <span class="text-slate-300 font-medium">{{ challenge.User?.username || 'Anonymous' }}</span>
+            </p>
+          </div>
+
+          <div class="mt-6">
+            <a [routerLink]="['/solve', challenge.id]" 
+               class="block text-center w-full bg-slate-800 hover:bg-emerald-600 text-emerald-400 hover:text-white font-semibold py-2 px-4 rounded-lg border border-slate-700 hover:border-emerald-500 transition duration-300">
+              Solve
+            </a>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading && challenges.length === 0 && !errorMessage) {
+    <div class="text-center py-20 bg-slate-900 rounded-xl border border-slate-800 border-dashed">
+      <p class="text-slate-400 text-lg mb-4">No challenges found. Be the first to create one!</p>
+      <a routerLink="/create" class="inline-block bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
+        Create New Challenge
+      </a>
+    </div>
+  }
+
+</div>

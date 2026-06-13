@@ -22,7 +22,7 @@ get isLoggedIn(): boolean {
       next: () => {
         this.router.navigate(['/home']);
       },
-      error: (err) => console.error('Errore durante il logout', err)
+      error: (err) => console.error('Error during logout', err)
     });
   }
 }

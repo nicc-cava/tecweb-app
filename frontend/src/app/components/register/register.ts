@@ -21,7 +21,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (!this.userData.username || !this.userData.password) {
-      this.errorMessage = 'Compila tutti i campi.';
+      this.errorMessage = 'Please fill in all fields.';
       return;
     }
 
@@ -34,7 +34,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Errore durante la registrazione. Riprova.';
+        this.errorMessage = err.error?.error || 'Error during registration. Please try again.';
         
         this.cdr.detectChanges(); // Forces Angular to update the HTML
       }
