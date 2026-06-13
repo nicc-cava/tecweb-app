@@ -20,6 +20,10 @@ export const register = async (req, res) => {
             password: hashedPassword
         });
 
+        req.session.isAuthenticated = true;
+        req.session.userId = newUser.id;
+        req.session.username = newUser.username;
+
         res.status(201).json({ 
             message: "Registration completed with success.",
             user: { id: newUser.id, username: newUser.username }
