@@ -5,12 +5,12 @@ import { RegisterComponent } from './components/register/register';
 import { HomeComponent } from './components/home/home';
 import { ChallengeCreateComponent } from './components/challenge-create/challenge-create';
 import { ChallengeSolveComponent } from './components/challenge-solve/challenge-solve';
-import { Rules } from './components/rules/rules';
+import { RulesComponent } from './components/rules/rules';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'rules', component: Rules },
+  { path: 'rules', component: RulesComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   
