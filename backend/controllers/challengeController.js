@@ -55,6 +55,30 @@ export const getAllChallenges = async (req, res) => {
     }
 };
 
+export const getChallengeById = async (req, res) => {
+    try {
+        const challengeId = req.params.id;
+        
+        const challenge = await Challenge.findByPk(challengeId, {
+            attributes: ['id', 'positiveExample', 'negativeExample', 'createdAt'],
+            include: [{
+                model: User,
+                attributes: ['username']
+            }]
+        });
+
+        if (!challenge) {
+            return res.status(404).json({ error: "Challenge not found." });
+        }
+
+        res.status(200).json(challenge);
+
+    } catch(error) {
+        console.error("Error retrieving challenge details:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
 /************************************************** CHALLENGES RESOLUTION ****************************************************/
 
 export const solveChallenge = async (req, res) => {

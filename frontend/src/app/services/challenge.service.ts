@@ -17,6 +17,10 @@ export class ChallengeService {
     return this.http.get(this.apiUrl, this.httpOptions);
   }
 
+  getChallengeById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`, this.httpOptions);
+  }
+
   createChallenge(challengeData: any): Observable<any> {
     return this.http.post(this.apiUrl, challengeData, this.httpOptions);
   }

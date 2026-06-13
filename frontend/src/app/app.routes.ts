@@ -4,7 +4,7 @@ import { LoginComponent } from './components/login/login';
 import { RegisterComponent } from './components/register/register';
 import { HomeComponent } from './components/home/home';
 import { ChallengeCreateComponent } from './components/challenge-create/challenge-create';
-import { ChallengeSolve } from './components/challenge-solve/challenge-solve';
+import { ChallengeSolveComponent } from './components/challenge-solve/challenge-solve';
 import { Rules } from './components/rules/rules';
 
 export const routes: Routes = [
@@ -21,7 +21,7 @@ export const routes: Routes = [
   },
   { 
     path: 'solve/:id', 
-    component: ChallengeSolve, 
+    component: ChallengeSolveComponent, 
     canActivate: [authGuard] 
   }
 ];

@@ -1,1 +1,130 @@
-<p>challenge-solve works!</p>
+<div class="max-w-3xl mx-auto mt-8">
+  
+  <a routerLink="/home" class="inline-flex items-center text-slate-400 hover:text-emerald-400 mb-6 transition duration-300">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    Back to Challenges
+  </a>
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center py-20 text-slate-400">
+      <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      <span class="text-lg">Loading mission briefing...</span>
+    </div>
+  }
+
+  @if (errorMessage && !challenge) {
+    <div class="bg-red-500/10 border border-red-500/50 text-red-400 p-6 rounded-xl text-center shadow-lg">
+      <p class="font-medium text-lg">{{ errorMessage }}</p>
+    </div>
+  }
+
+  @if (!isLoading && challenge) {
+    <div class="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden">
+      
+      <div class="bg-slate-800/50 p-6 border-b border-slate-800">
+        <h1 class="text-3xl font-bold text-white mb-2">Challenge #{{ challenge.id }}</h1>
+        <p class="text-slate-400">
+          Created by <span class="text-emerald-400 font-semibold">{{ challenge.User?.username || 'Anonymous' }}</span>
+        </p>
+      </div>
+
+      <div class="p-6 md:p-8">
+        
+        <div class="mb-8 space-y-4">
+          <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            Mission Briefing
+          </h2>
+          
+          <div class="bg-slate-950 rounded-lg p-4 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between">
+            <span class="text-slate-400 text-sm font-medium mb-2 md:mb-0">Must Match (Positive):</span>
+            <code class="text-emerald-400 bg-emerald-900/30 px-3 py-1 rounded font-mono break-all">{{ challenge.positiveExample }}</code>
+          </div>
+          
+          <div class="bg-slate-950 rounded-lg p-4 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between">
+            <span class="text-slate-400 text-sm font-medium mb-2 md:mb-0">Must NOT Match (Negative):</span>
+            <code class="text-red-400 bg-red-900/30 px-3 py-1 rounded font-mono break-all">{{ challenge.negativeExample }}</code>
+          </div>
+        </div>
+
+        <hr class="border-slate-800 mb-8">
+
+        <form (ngSubmit)="onSubmit()" #solveForm="ngForm">
+          <label for="proposedRegex" class="block text-sm font-bold text-emerald-400 mb-3">Your Regex Solution</label>
+          
+          <div class="relative mb-6">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-mono text-lg">/</span>
+            <input 
+              type="text" 
+              id="proposedRegex" 
+              name="proposedRegex" 
+              [(ngModel)]="proposedRegex" 
+              required
+              class="w-full bg-slate-950 font-mono text-lg border border-slate-700 rounded-lg pl-8 pr-8 py-4 text-emerald-300 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition duration-200"
+              placeholder="Write your regex here..."
+            >
+            <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 font-mono text-lg">/</span>
+          </div>
+
+          <button 
+            type="submit" 
+            [disabled]="isSubmitting || solveForm.invalid"
+            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center text-lg"
+          >
+            @if (isSubmitting) {
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              Evaluating...
+            } @else {
+              Run Tests
+            }
+          </button>
+        </form>
+
+        @if (result) {
+          <div class="mt-8 p-6 rounded-xl border animate-fade-in-up"
+               [ngClass]="result.success ? 'bg-emerald-900/20 border-emerald-500/50' : 'bg-red-900/20 border-red-500/50'">
+            
+            <h3 class="text-2xl font-bold mb-2 flex items-center"
+                [ngClass]="result.success ? 'text-emerald-400' : 'text-red-400'">
+              
+              @if (result.success) {
+                <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Challenge Passed!
+              } @else {
+                <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Tests Failed
+              }
+            </h3>
+            
+            <p class="text-slate-300 text-lg mb-6">{{ result.message }}</p>
+            
+            @if (result.results) {
+              <div class="space-y-4 pt-4 border-t border-slate-700/50">
+                <h4 class="text-slate-400 font-semibold text-sm uppercase tracking-wider">Test Breakdown</h4>
+                
+                <div class="flex justify-between items-center bg-slate-950 p-4 rounded-lg border border-slate-800">
+                  <span class="text-slate-300">Positive Strings Matched:</span>
+                  <span class="font-mono text-lg font-bold" 
+                        [ngClass]="result.results.positivePassed === result.results.totalPositive ? 'text-emerald-400' : 'text-yellow-400'">
+                    {{ result.results.positivePassed }} / {{ result.results.totalPositive }}
+                  </span>
+                </div>
+
+                <div class="flex justify-between items-center bg-slate-950 p-4 rounded-lg border border-slate-800">
+                  <span class="text-slate-300">Negative Strings Rejected:</span>
+                  <span class="font-mono text-lg font-bold" 
+                        [ngClass]="result.results.negativePassed === result.results.totalNegative ? 'text-emerald-400' : 'text-yellow-400'">
+                    {{ result.results.negativePassed }} / {{ result.results.totalNegative }}
+                  </span>
+                </div>
+              </div>
+            }
+
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+
+</div>

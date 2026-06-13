@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 User.hasMany(Challenge, {foreignKey: 'authorId'});
 Challenge.belongsTo(User, {foreignKey: 'authorId'});
 
-sequelize.sync({alter: true})
+sequelize.sync()
     .then(() => {
         console.log("Database syncronization was successfull.");
         app.listen(PORT, () => {
