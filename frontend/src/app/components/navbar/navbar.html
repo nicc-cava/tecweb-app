@@ -1,0 +1,27 @@
+<nav class="bg-slate-900 text-slate-300 shadow-lg border-b border-slate-800">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    
+    <a routerLink="/home" class="text-2xl font-bold tracking-wider text-white hover:text-emerald-400 transition duration-300">
+      Regex<span class="text-emerald-500">Riddle</span>
+    </a>
+
+    <div class="flex items-center space-x-6 font-medium">
+      <a routerLink="/home" class="hover:text-emerald-400 transition duration-300">Sfide</a>
+      <a routerLink="/rules" class="hover:text-emerald-400 transition duration-300">Regole</a>
+
+      @if (isLoggedIn) {
+        <a routerLink="/create" class="hover:text-emerald-400 transition duration-300">Crea Sfida</a>
+        <button (click)="onLogout()" class="text-red-400 hover:text-white hover:bg-red-500/20 px-4 py-2 border border-red-500/30 rounded-lg transition duration-300">
+          Esci
+        </button>
+      } 
+      @else {
+        <a routerLink="/login" class="hover:text-white transition duration-300">Accedi</a>
+        <a routerLink="/register" class="bg-emerald-500 text-slate-950 hover:bg-emerald-400 px-5 py-2 rounded-lg font-semibold shadow-md transition duration-300">
+          Registrati
+        </a>
+      }
+    </div>
+
+  </div>
+</nav>
