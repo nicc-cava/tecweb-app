@@ -1,12 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   private apiUrl = 'http://localhost:3000/api/auth';
   private httpOptions = { withCredentials: true };
 
@@ -41,5 +43,11 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return this.isAuthenticated();
+  }
+
+  clearLocalSession(): void {
+    localStorage.removeItem('isAuthenticated');
+    this.isAuthenticated.set(false);
+    this.router.navigate(['/login']);
   }
 }

@@ -34,8 +34,11 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Error during login. Check your credentials.';
-
+        if (err.status === 0) {
+          this.errorMessage = 'Error during login. Please try again later.';
+        } else {
+          this.errorMessage = err.error?.error || 'Login failed. Please check your credentials.';
+        }
         this.cdr.detectChanges(); // Forces Angular to update the HTML
       }
     });

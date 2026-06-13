@@ -34,8 +34,11 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Error during registration. Please try again.';
-        
+        if (err.status === 0) {
+          this.errorMessage = 'Error during registration. Please try again later.';
+        } else {
+          this.errorMessage = err.error?.error || 'Registration failed. Please check your credentials.';
+        }
         this.cdr.detectChanges(); // Forces Angular to update the HTML
       }
     });

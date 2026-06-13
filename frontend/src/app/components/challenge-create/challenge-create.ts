@@ -63,7 +63,11 @@ export class ChallengeCreateComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Error creating the challenge. Please check your inputs.';
+        if (err.status === 0) {
+          this.errorMessage = 'Error while creating the challenge. Please try again later.';
+        } else {
+          this.errorMessage = err.error?.error || 'Challenge creation failed. Please check your inputs.';
+        }
         this.cdr.detectChanges();
       }
     });

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,5 @@ import { Navbar } from './components/navbar/navbar';
 })
 export class App {
   title = 'frontend';
+  toastService = inject(ToastService); // Make the service publicly available to avoid toasts to disappear after changing page
 }
