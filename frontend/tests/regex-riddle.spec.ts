@@ -5,9 +5,7 @@ const BASE_URL = 'http://localhost:4200';
 
 test.describe('RegexRiddle E2E Tests', () => {
 
-  // ========================================
-  // SECTION 1: Navigation and Basic Security
-  // ========================================
+/**************************************************** NAVIGATION AND SECURITY *****************************************************/
 
   test('1. Should load the home page and display the navbar', async ({ page }) => {
     await page.goto(`${BASE_URL}/home`);
@@ -35,10 +33,8 @@ test.describe('RegexRiddle E2E Tests', () => {
     await expect(page).toHaveURL(/.*login/);
   });
 
-  // ============================================
-  // SECTION 2: Authentication (Register & Login)
-  // ============================================
-
+/********************************************************* AUTHENTICATION *********************************************************/
+  
   test('4. Should show an error message on invalid login', async ({ page }) => {
     await page.goto(`${BASE_URL}/login`);
     
@@ -87,9 +83,8 @@ test.describe('RegexRiddle E2E Tests', () => {
     await expect(page.getByText('Logout')).toBeVisible();
   });
 
-  // ===========================================
-  // SECTION 3: Game Flow (Creation and Solving)
-  // ===========================================
+/********************************************************* GAME FLOW *********************************************************/
+
 
   // For these tests we use a beforeEach hook to log in a dummy user before each test
   test.describe('Authenticated User Flows', () => {
