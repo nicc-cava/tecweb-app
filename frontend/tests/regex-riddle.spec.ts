@@ -42,8 +42,8 @@ test.describe('RegexRiddle E2E Tests', () => {
   test('4. Should show an error message on invalid login', async ({ page }) => {
     await page.goto(`${BASE_URL}/login`);
     
-    await page.fill('#username', 'utente_falso_123');
-    await page.fill('#password', 'password_sbagliata');
+    await page.fill('#username', 'fake_user_123');
+    await page.fill('#password', 'wrong_password');
     await page.click('button[type="submit"]');
     
     // Verify that the red error div appears
@@ -125,7 +125,7 @@ test.describe('RegexRiddle E2E Tests', () => {
       await expect(page.getByText('Login')).toBeVisible();
     });
 
-    test('9. Should load the mission briefing for an existing challenge', async ({ page }) => {
+    test('9. Should load the challenge briefing for an existing challenge', async ({ page }) => {
       await page.goto(`${BASE_URL}/home`);
       
       // Click on the first available "Solve" button in the grid

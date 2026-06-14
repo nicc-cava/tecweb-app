@@ -15,6 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       
       const isAuthRoute = req.url.includes('/login') || req.url.includes('/register');
 
+      // If it's an expired session
       if (error.status === 401 && !isAuthRoute) {
         toastService.show('Your session has expired. Please log in again.', true, 5000);
         authService.clearLocalSession();
@@ -24,4 +25,3 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
-
