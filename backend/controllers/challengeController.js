@@ -1,5 +1,6 @@
 import Challenge from '../models/challenge.js';
 import User from '../models/user.js';
+import SolvedChallenge from '../models/solvedChallenge.js';
 
 /*************************************************** CHALLENGE CREATION *****************************************************/
 
@@ -85,6 +86,7 @@ export const solveChallenge = async (req, res) => {
     try {
         const challengeId = req.params.id; // Taken from the URL
         const {proposedRegex} = req.body;
+        const userId = req.session.userId;
 
         let userRegex;
         try {
@@ -96,6 +98,19 @@ export const solveChallenge = async (req, res) => {
         const challenge = await Challenge.findByPk(challengeId);
         if (!challenge) {
             return res.status(404).json({error: "Challenge not found."});
+        }
+
+        const creatorId = challenge.authorId || challenge.UserId; 
+        if (creatorId === userId) {
+            return res.status(403).json({error: "Nice try! You cannot play a challenge created by yourself."});
+        }
+
+        const alreadySolved = await SolvedChallenge.findOne({ 
+            where: { userId: userId, challengeId: challengeId } 
+        });
+        
+        if (alreadySolved) {
+            return res.status(403).json({error: "You have already cracked this riddle! Leave some fun for the others."});
         }
 
         let positivePassed = 0;
@@ -112,14 +127,17 @@ export const solveChallenge = async (req, res) => {
             (positivePassed === challenge.positiveTestStrings.length) &&
             (negativePassed === challenge.negativeTestStrings.length);
 
-        const userId = req.session.userId;
         if (userId) {
             const user = await User.findByPk(userId);
             if (user) {
                 user.attemptsCount += 1;
+                
                 if (isVictorious) {
                     user.solvedCount += 1;
+                    
+                    await SolvedChallenge.create({ userId: userId, challengeId: challengeId });
                 }
+                
                 await user.save();
             }
         }

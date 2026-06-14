@@ -12,6 +12,7 @@ import authRoutes from './routes/authRoutes.js';
 import challengeRoutes from './routes/challengeRoutes.js';
 import User from './models/user.js';
 import Challenge from './models/challenge.js';
+import SolvedChallenge from './models/solvedChallenge.js';
 
 /******************************************************** SETUP **********************************************************/
 
@@ -42,9 +43,7 @@ app.use(session({
 /******************************************************* ROUTING *********************************************************/
 
 app.use('/api/auth', authRoutes);
-
 app.use('/api/challenges', challengeRoutes);
-
 app.get('/', (req, res) => {
     res.json({message: "Welcome to RegexRiddle's API!"});
 });
@@ -53,6 +52,18 @@ app.get('/', (req, res) => {
 
 User.hasMany(Challenge, {foreignKey: 'authorId'});
 Challenge.belongsTo(User, {foreignKey: 'authorId'});
+User.belongsToMany(Challenge, { 
+    through: SolvedChallenge, 
+    as: 'Solved',
+    foreignKey: 'userId',
+    otherKey: 'challengeId'
+});
+Challenge.belongsToMany(User, { 
+    through: SolvedChallenge, 
+    as: 'Solvers',
+    foreignKey: 'challengeId',
+    otherKey: 'userId'
+});
 
 sequelize.sync()
     .then(() => {

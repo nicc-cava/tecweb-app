@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.js';
+import { Op } from 'sequelize';
 
 /******************************************************* REGISTRATION *********************************************************/
 
@@ -126,6 +127,11 @@ export const updateAvatar = async (req, res) => {
 export const getLeaderboard = async (req, res) => {
     try {
         const users = await User.findAll({
+            where: {
+                attemptsCount: {
+                    [Op.gt]: 0
+                }
+            },
             attributes: ['id', 'username', 'avatar', 'solvedCount', 'attemptsCount'],
             order: [
                 ['solvedCount', 'DESC'],
