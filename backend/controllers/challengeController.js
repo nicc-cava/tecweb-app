@@ -112,6 +112,17 @@ export const solveChallenge = async (req, res) => {
             (positivePassed === challenge.positiveTestStrings.length) &&
             (negativePassed === challenge.negativeTestStrings.length);
 
+        const userId = req.session.userId;
+        if (userId) {
+            const user = await User.findByPk(userId);
+            if (user) {
+                user.attemptsCount += 1;
+                if (isVictorious) {
+                    user.solvedCount += 1;
+                }
+                await user.save();
+            }
+        }
 
         res.status(200).json({
             success: isVictorious,

@@ -122,3 +122,20 @@ export const updateAvatar = async (req, res) => {
         res.status(500).json({ error: "Error updating avatar" });
     }
 };
+
+export const getLeaderboard = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            attributes: ['id', 'username', 'avatar', 'solvedCount', 'attemptsCount'],
+            order: [
+                ['solvedCount', 'DESC'],
+                ['attemptsCount', 'ASC']
+            ],
+            limit: 10
+        });
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Leaderboard Error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+};

@@ -13,6 +13,14 @@ const User = sequelize.define('User', {
     },
     avatar: {
         type: DataTypes.TEXT
+    },
+    solvedCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+    attemptsCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 });
 

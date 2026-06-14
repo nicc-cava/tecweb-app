@@ -7,6 +7,7 @@ import { ChallengeCreateComponent } from './components/challenge-create/challeng
 import { ChallengeSolveComponent } from './components/challenge-solve/challenge-solve';
 import { RulesComponent } from './components/rules/rules';
 import { ProfileComponent } from './components/profile/profile';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,15 +15,8 @@ export const routes: Routes = [
   { path: 'rules', component: RulesComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'leaderboard', component: LeaderboardComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { 
-    path: 'create', 
-    component: ChallengeCreateComponent, 
-    canActivate: [authGuard] 
-  },
-  { 
-    path: 'solve/:id', 
-    component: ChallengeSolveComponent, 
-    canActivate: [authGuard] 
-  }
+  { path: 'create', component: ChallengeCreateComponent, canActivate: [authGuard] },
+  { path: 'solve/:id', component: ChallengeSolveComponent, canActivate: [authGuard] }
 ];

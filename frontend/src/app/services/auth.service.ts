@@ -49,6 +49,10 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/avatar`, { avatar: avatarBase64 }, this.httpOptions);
   }
 
+  getLeaderboard(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/leaderboard`, this.httpOptions);
+  }
+
   isLoggedIn(): boolean {
     return this.isAuthenticated();
   }
