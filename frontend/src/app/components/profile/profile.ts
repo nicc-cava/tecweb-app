@@ -39,7 +39,6 @@ export class ProfileComponent implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Controllo sicurezza: Max 500 KB (Base64 pesa di più)
     if (file.size > 500 * 1024) {
       this.toastService.show('File is too large. Max 500KB allowed.', true);
       return;

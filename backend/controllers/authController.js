@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.js';
-import { Op } from 'sequelize';
+import {Op} from 'sequelize';
 
 /******************************************************* REGISTRATION *********************************************************/
 
@@ -69,7 +69,6 @@ export const login = async (req, res) => {
 
 /********************************************************* LOGOUT ************************************************************/
 
-
 export const logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -81,7 +80,6 @@ export const logout = (req, res) => {
 };
 
 /******************************************************* UTILITIES ***********************************************************/
-
 
 export const getProfile = async (req, res) => {
     try {

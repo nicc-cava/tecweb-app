@@ -9,7 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const toastService = inject(ToastService);
 
-  // "next(req)" sends the request to the backend.
+  // The call "next(req)" sends the request to the backend.
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {

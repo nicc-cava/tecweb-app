@@ -1,20 +1,20 @@
 import { test, expect } from '@playwright/test';
 
-// Costante per l'URL base di Angular
+// Constant for the Angular base URL
 const BASE_URL = 'http://localhost:4200';
 
 test.describe('RegexRiddle E2E Tests', () => {
 
-  // ==========================================
-  // SEZIONE 1: Navigazione e Sicurezza Base
-  // ==========================================
+  // ========================================
+  // SECTION 1: Navigation and Basic Security
+  // ========================================
 
   test('1. Should load the home page and display the navbar', async ({ page }) => {
     await page.goto(`${BASE_URL}/home`);
     
-    // Verifica che la navbar sia visibile
+    // Verify that the navbar is visible
     await expect(page.locator('nav')).toBeVisible();
-    // Cerca esattamente il link con il nome del brand, evitando ambiguità!
+    // Search exactly for the link with the brand name, avoiding ambiguity
     await expect(page.getByRole('link', { name: 'RegexRiddle' })).toBeVisible();
   });
 
@@ -22,22 +22,22 @@ test.describe('RegexRiddle E2E Tests', () => {
     await page.goto(`${BASE_URL}/home`);
     await page.click('text=Rules');
     
-    // Verifica l'URL e la presenza del titolo corretto
+    // Verify the URL and the presence of the correct title
     await expect(page).toHaveURL(/.*rules/);
     await expect(page.locator('h1')).toContainText('Game Rules');
   });
 
   test('3. AuthGuard should block unauthenticated users from /create', async ({ page }) => {
-    // Tenta di forzare l'accesso alla rotta protetta
+    // Try to force access to the protected route
     await page.goto(`${BASE_URL}/create`);
     
-    // Angular dovrebbe intercettarlo e rimbalzarlo al login
+    // Angular should intercept it and redirect to login
     await expect(page).toHaveURL(/.*login/);
   });
 
-  // ==========================================
-  // SEZIONE 2: Autenticazione (Register & Login)
-  // ==========================================
+  // ============================================
+  // SECTION 2: Authentication (Register & Login)
+  // ============================================
 
   test('4. Should show an error message on invalid login', async ({ page }) => {
     await page.goto(`${BASE_URL}/login`);
@@ -46,12 +46,12 @@ test.describe('RegexRiddle E2E Tests', () => {
     await page.fill('#password', 'password_sbagliata');
     await page.click('button[type="submit"]');
     
-    // Verifica che compaia il div rosso di errore
+    // Verify that the red error div appears
     await expect(page.locator('.text-red-400')).toBeVisible();
   });
 
   test('5. Should register a new user successfully', async ({ page }) => {
-    // Usa un timestamp per garantire un username unico ad ogni esecuzione del test
+    // Use a timestamp to ensure a unique username for each test execution
     const uniqueUser = `hacker_${Date.now()}`;
     
     await page.goto(`${BASE_URL}/register`);
@@ -59,45 +59,43 @@ test.describe('RegexRiddle E2E Tests', () => {
     await page.fill('#password', 'SuperSecret123!');
     await page.click('button[type="submit"]');
     
-    // Dopo la registrazione, dovrebbe rimandare alla Home
+    // After registration, it should redirect to the Home page
     await expect(page).toHaveURL(/.*home/);
   });
 
   test('6. Should login successfully and update the Navbar', async ({ page }) => {
-    // Nota: presuppone che tu abbia creato un utente "mario_rossi" per i test, 
-    // oppure puoi concatenare questo test al precedente. Usiamo un utente mock o uno reale.
     const testUser = `test_user_${Date.now()}`;
     
-    // Setup rapido: Registra l'utente per fare login pulito
+    // Quick setup: Register the user for a clean login
     await page.goto(`${BASE_URL}/register`);
     await page.fill('#username', testUser);
     await page.fill('#password', 'testpass');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/.*home/);
     
-    // Fai il logout
+    // Logout
     await page.click('text=Logout');
 
-    // Fai il login vero e proprio
+    // Perform the actual login
     await page.goto(`${BASE_URL}/login`);
     await page.fill('#username', testUser);
     await page.fill('#password', 'testpass');
     await page.click('button[type="submit"]');
     
-    // Verifica che la navbar mostri le opzioni per utenti loggati
+    // Verify that the navbar shows options for logged-in users
     await expect(page.getByText('Create Challenge')).toBeVisible();
     await expect(page.getByText('Logout')).toBeVisible();
   });
 
-  // ==========================================
-  // SEZIONE 3: Flusso di Gioco (Creazione e Risoluzione)
-  // ==========================================
+  // ===========================================
+  // SECTION 3: Game Flow (Creation and Solving)
+  // ===========================================
 
-  // Per questi test usiamo un hook beforeEach per loggare un utente fittizio prima di ogni test
+  // For these tests we use a beforeEach hook to log in a dummy user before each test
   test.describe('Authenticated User Flows', () => {
     
     test.beforeEach(async ({ page }) => {
-      // Registra e logga un utente al volo prima di testare le sfide
+      // Register and log in a user on the fly before testing the challenges
       const sessionUser = `player_${Date.now()}`;
       await page.goto(`${BASE_URL}/register`);
       await page.fill('#username', sessionUser);
@@ -107,14 +105,14 @@ test.describe('RegexRiddle E2E Tests', () => {
     });
 
     test('7. Should navigate to Create Challenge and verify form validation', async ({ page }) => {
-      // 1. Va alla pagina di creazione
+      // 1. Go to the creation page
       await page.click('text=Create Challenge');
       await expect(page).toHaveURL(/.*create/);
       
-      // 2. Verifica che il titolo sia corretto
+      // 2. Verify that the title is correct
       await expect(page.locator('h1')).toContainText('Create a New Challenge');
       
-      // 3. Ottimo test: verifica che la sicurezza del form funzioni e che il bottone sia DISABILITATO di default
+      // 3. Verify that form security works and the button is DISABLED by default
       const submitBtn = page.getByRole('button', { name: 'Submit Challenge' });
       await expect(submitBtn).toBeDisabled();
     });
@@ -122,7 +120,7 @@ test.describe('RegexRiddle E2E Tests', () => {
     test('8. Should logout and clear the session', async ({ page }) => {
       await page.click('text=Logout');
       
-      // I pulsanti protetti dovrebbero sparire, e dovrebbero tornare Login/Register
+      // Protected buttons should disappear, and Login/Register should return
       await expect(page.getByText('Create Challenge')).not.toBeVisible();
       await expect(page.getByText('Login')).toBeVisible();
     });
@@ -130,10 +128,10 @@ test.describe('RegexRiddle E2E Tests', () => {
     test('9. Should load the mission briefing for an existing challenge', async ({ page }) => {
       await page.goto(`${BASE_URL}/home`);
       
-      // Clicca sul primo bottone "Solve" disponibile nella griglia
+      // Click on the first available "Solve" button in the grid
       await page.locator('text=Solve').first().click();
       
-      // Verifica che la UI della pagina di risoluzione venga caricata
+      // Verify that the solving page UI is loaded
       await expect(page).toHaveURL(/.*solve\/\d+/);
       await expect(page.getByText('Mission Briefing')).toBeVisible();
       await expect(page.locator('#proposedRegex')).toBeVisible();
@@ -143,15 +141,15 @@ test.describe('RegexRiddle E2E Tests', () => {
       await page.goto(`${BASE_URL}/home`);
       await page.locator('text=Solve').first().click();
       
-      // Compila la soluzione
-      await page.fill('#proposedRegex', '.*'); // Una regex base che matcha tutto
+      // Fill in the solution
+      await page.fill('#proposedRegex', '.*'); // A basic regex that matches everything
       await page.click('button[type="submit"]');
       
-      // Aspetta che appaia il blocco dei risultati (sano o fallito)
-      // Usiamo una RegEx nel locator per cercare il testo "Challenge Passed!" o "Tests Failed"
+      // Wait for the results block to appear (passed or failed)
+      // We use a RegEx in the locator to search for the text "Challenge Passed!" or "Tests Failed"
       await expect(page.locator('h3:has-text("Challenge Passed!"), h3:has-text("Tests Failed")')).toBeVisible();
       
-      // Verifica che mostri la breakdown dei test
+      // Verify that it shows the test breakdown
       await expect(page.getByText('Test Breakdown')).toBeVisible();
       await expect(page.getByText('Positive Strings Matched:')).toBeVisible();
     });
