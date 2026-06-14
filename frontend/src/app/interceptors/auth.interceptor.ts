@@ -12,11 +12,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // The call "next(req)" sends the request to the backend.
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      
+      const isAuthRoute = req.url.includes('/login') || req.url.includes('/register');
+
+      if (error.status === 401 && !isAuthRoute) {
         toastService.show('Your session has expired. Please log in again.', true, 5000);
         authService.clearLocalSession();
       }
+
       return throwError(() => error);
     })
   );
 };
+
