@@ -25,7 +25,9 @@ app.use(cors({
     credentials: true // Allows session cookie exchange between ports
 }))
 
-app.use(express.json());
+// The json size limit allows to upload images as avatars
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET,

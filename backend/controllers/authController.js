@@ -78,3 +78,47 @@ export const logout = (req, res) => {
         res.status(200).json({message: "Logout completed with success."});
     });
 };
+
+/******************************************************* UTILITIES ***********************************************************/
+
+
+export const getProfile = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const user = await User.findByPk(userId, {
+            attributes: ['id', 'username', 'avatar']
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Profile Error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+};
+
+export const updateAvatar = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const { avatar } = req.body;
+        
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        await User.update({ avatar }, { where: { id: userId } });
+        
+        res.status(200).json({ message: "Avatar updated successfully", avatar });
+    } catch (error) {
+        console.error("Update Avatar Error:", error);
+        res.status(500).json({ error: "Error updating avatar" });
+    }
+};

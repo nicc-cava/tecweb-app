@@ -41,6 +41,14 @@ export class AuthService {
     );
   }
 
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/profile`, this.httpOptions);
+  }
+
+  updateAvatar(avatarBase64: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/avatar`, { avatar: avatarBase64 }, this.httpOptions);
+  }
+
   isLoggedIn(): boolean {
     return this.isAuthenticated();
   }
