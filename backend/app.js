@@ -36,7 +36,8 @@ app.use(session({
     saveUninitialized: false, // Prevents the server from creating sessions for users who have not provided any data
     cookie: { 
         secure: false,
-        httpOnly: true // Cookie is not readable by any browser JavaScript code (it prevents XSS)
+        httpOnly: true, // Cookie is not readable by any browser JavaScript code (it prevents XSS)
+        sameSite: 'strict' // Prevents CSRF
     }
 }));
 
@@ -50,8 +51,11 @@ app.get('/', (req, res) => {
 
 /******************************************** DATABASE SYNC AND SERVER START *********************************************/
 
+// One to many
 User.hasMany(Challenge, {foreignKey: 'authorId'});
 Challenge.belongsTo(User, {foreignKey: 'authorId'});
+
+// Many to many
 User.belongsToMany(Challenge, { 
     through: SolvedChallenge, 
     as: 'Solved',

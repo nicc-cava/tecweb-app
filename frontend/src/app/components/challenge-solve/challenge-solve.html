@@ -49,6 +49,12 @@
 
         <hr class="border-slate-800 mb-8">
 
+        @if (errorMessage && challenge) {
+          <div class="mb-6 bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg text-center">
+            <p class="font-medium">{{ errorMessage }}</p>
+          </div>
+        }
+
         <form (ngSubmit)="onSubmit()" #solveForm="ngForm">
           <label for="proposedRegex" class="block text-sm font-bold text-emerald-400 mb-3">Your Regex Solution</label>
           

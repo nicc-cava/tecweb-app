@@ -74,7 +74,7 @@ export const logout = (req, res) => {
         if (err) {
             return res.status(500).json({error: "Error during logout."});
         }
-        res.clearCookie('connect.sid');
+        res.clearCookie('connect.sid'); // Forces the browser to delete the cookie
         res.status(200).json({message: "Logout completed with success."});
     });
 };
@@ -83,7 +83,7 @@ export const logout = (req, res) => {
 
 export const getProfile = async (req, res) => {
     try {
-        const userId = req.session.userId;
+        const userId = req.session.userId; // Retrieving the id from the session prevents maliciuos users to send request with someone else's id
 
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized" });
@@ -133,7 +133,7 @@ export const getLeaderboard = async (req, res) => {
             attributes: ['id', 'username', 'avatar', 'solvedCount', 'attemptsCount'],
             order: [
                 ['solvedCount', 'DESC'],
-                ['attemptsCount', 'ASC']
+                ['attemptsCount', 'ASC'] // When solvedCount draws the player with fewer attempts wins
             ],
             limit: 10
         });

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.post('/logout', logout);
+router.post('/logout', logout); // The path is public so that users can still log out even if their session has expired
 router.get('/profile', requireAuth, getProfile);
 router.put('/avatar', requireAuth, updateAvatar);
 router.get('/leaderboard', getLeaderboard);

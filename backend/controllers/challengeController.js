@@ -41,6 +41,7 @@ export const getAllChallenges = async (req, res) => {
     try {
         const challenges = await Challenge.findAll({
             attributes: {exclude: ['positiveTestStrings', 'negativeTestStrings', 'regex']},
+            // JOIN to retreive the creator's username
             include: [{
                 model: User,
                 attributes: ['username']
@@ -100,7 +101,7 @@ export const solveChallenge = async (req, res) => {
             return res.status(404).json({error: "Challenge not found."});
         }
 
-        const creatorId = challenge.authorId || challenge.UserId; 
+        const creatorId = challenge.authorId //|| challenge.UserId; // Prevents errors caused by Sequelize renaming attributes when making relationships
         if (creatorId === userId) {
             return res.status(403).json({error: "Nice try! You cannot play a challenge created by yourself."});
         }
@@ -110,7 +111,7 @@ export const solveChallenge = async (req, res) => {
         });
         
         if (alreadySolved) {
-            return res.status(403).json({error: "You have already cracked this riddle! Leave some fun for the others."});
+            return res.status(403).json({error: "You have already solved this riddle."});
         }
 
         let positivePassed = 0;
