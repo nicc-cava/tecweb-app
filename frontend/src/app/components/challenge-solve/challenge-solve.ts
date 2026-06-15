@@ -29,7 +29,7 @@ export class ChallengeSolveComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
-        this.challengeId = +idParam;
+        this.challengeId = +idParam; // Type coercion converts string to number
         this.loadChallenge();
       } else {
         this.router.navigate(['/home']);
@@ -65,8 +65,9 @@ export class ChallengeSolveComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting = true; // After the submission the button is disabled in the .html
 
+    // The regex is tested in the backend for anticheat and for ReDoS (Regular Expression Denial of Service)
     this.challengeService.solveChallenge(this.challengeId, this.proposedRegex).subscribe({
       next: (res) => {
         this.isSubmitting = false;

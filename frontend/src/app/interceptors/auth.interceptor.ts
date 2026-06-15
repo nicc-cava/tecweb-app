@@ -9,19 +9,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const toastService = inject(ToastService);
 
-  // The call "next(req)" sends the request to the backend.
+  // The call "next(req)" sends the request to the backend
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       
       const isAuthRoute = req.url.includes('/login') || req.url.includes('/register');
 
-      // If it's an expired session
+      // If the session is expired and the user is not already trying to log in
       if (error.status === 401 && !isAuthRoute) {
         toastService.show('Your session has expired. Please log in again.', true, 5000);
-        authService.clearLocalSession();
+        authService.clearLocalSession(); // Redirection to login
       }
 
-      return throwError(() => error);
+      return throwError(() => error); // Sends the error to the component
     })
   );
 };

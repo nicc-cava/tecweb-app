@@ -12,8 +12,8 @@ import { ChallengeService } from '../../services/challenge.service';
 })
 export class ChallengeCreateComponent {
   regex: string = '';
-  positiveExample: string = ''; // New!
-  negativeExample: string = ''; // New!
+  positiveExample: string = '';
+  negativeExample: string = '';
   positiveStringsText: string = '';
   negativeStringsText: string = '';
   isLoading: boolean = false;
@@ -32,11 +32,13 @@ export class ChallengeCreateComponent {
     }
 
     const positiveTestStrings = this.positiveStringsText
+      // String formatting
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
 
     const negativeTestStrings = this.negativeStringsText
+      // String formatting
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
@@ -49,6 +51,7 @@ export class ChallengeCreateComponent {
 
     this.isLoading = true;
 
+    // DTO transferred to createChallenge
     const payload = {
       regex: this.regex,
       positiveExample: this.positiveExample,

@@ -28,6 +28,7 @@ export class RegisterComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
+    // The function subscribe allows the component to consume the data stream passed by the service through the pipe
     this.authService.register(this.userData).subscribe({
       next: () => {
         this.router.navigate(['/home']);
@@ -39,7 +40,7 @@ export class RegisterComponent {
         } else {
           this.errorMessage = err.error?.error || 'Registration failed. Please check your credentials.';
         }
-        this.cdr.detectChanges(); // Forces Angular to update the HTML
+        this.cdr.detectChanges(); // The CDR forces the rendering of the page when the asyncronous call ends
       }
     });
   }

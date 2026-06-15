@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   private toastService = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
+  // This method runs automatically when the component is loaded
   ngOnInit() {
     this.authService.getProfile().subscribe({
       next: (data) => {
@@ -35,6 +36,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // When the user select a file trigers an event
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -46,10 +48,12 @@ export class ProfileComponent implements OnInit {
 
     // Legge il file e lo trasforma in stringa Base64
     const reader = new FileReader();
+    // When the reading has completed
     reader.onload = () => {
       this.previewUrl = reader.result as string;
       this.cdr.detectChanges();
     };
+    // Reads the file as a Base64 string
     reader.readAsDataURL(file);
   }
 

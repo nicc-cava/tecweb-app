@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.challenges = data; 
         this.isLoading = false;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); // The CDR forces the rendering of the page when the asyncronous call ends
       },
       error: (err) => {
         console.error('Error fetching challenges:', err);

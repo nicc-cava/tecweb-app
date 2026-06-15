@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // This service is a singleton
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -12,13 +12,15 @@ export class AuthService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private httpOptions = { withCredentials: true };
 
-  isAuthenticated = signal<boolean>(localStorage.getItem('isAuthenticated') === 'true'); // Signal for updating view after login
+  isAuthenticated = signal<boolean>(localStorage.getItem('isAuthenticated') === 'true'); // The signal allows to update the view after the login
 
   register(userData: any): Observable<any> {
+    // The pipe allows the data stream to flow without consuming it
     return this.http.post(`${this.apiUrl}/register`, userData, this.httpOptions).pipe(
-      tap(() => {
-        localStorage.setItem('isAuthenticated', 'true');
-        this.isAuthenticated.set(true);
+      // The function tap executes side effect operations on the data
+      tap(() => { 
+        localStorage.setItem('isAuthenticated', 'true'); // Local storage update
+        this.isAuthenticated.set(true); // Signal update to update the view
       })
     );
   }
