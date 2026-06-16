@@ -1,6 +1,7 @@
 import Challenge from '../models/challenge.js';
 import User from '../models/user.js';
 import SolvedChallenge from '../models/solvedChallenge.js';
+import RE2 from 're2';
 
 /*************************************************** CHALLENGE CREATION *****************************************************/
 
@@ -13,7 +14,7 @@ export const createChallenge = async (req, res) => {
         }
 
         try {
-            new RegExp(regex);
+            new RE2(regex);
         } catch(e) {
             return res.status(400).json({error: "Secret regex is not syntactically valid."});
         }
@@ -91,7 +92,7 @@ export const solveChallenge = async (req, res) => {
 
         let userRegex;
         try {
-            userRegex = new RegExp(proposedRegex);
+            userRegex = new RE2(proposedRegex);
         } catch(e) {
             return res.status(400).json({error: "Your regex is invalid. Check the syntax."});
         }
